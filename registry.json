@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "tools": {
+    "claude": {
+      "types": {
+        "command": { "targetDir": ".claude/commands" },
+        "script": { "targetDir": ".claude/scripts" },
+        "skill": { "targetDir": ".claude/skills/{name}" },
+        "hook": { "settingsFile": ".claude/settings.json", "mergeKey": "hooks" }
+      }
+    }
+  },
+  "items": [
+    {
+      "name": "commit-message",
+      "tool": "claude",
+      "type": "command",
+      "description": "Generate a commit message for staged git changes",
+      "tags": ["git"],
+      "files": [
+        { "src": "items/claude/commands/commit-message/commit-message.md", "target": ".claude/commands/commit-message.md" }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "i18n",
+      "tool": "claude",
+      "type": "command",
+      "description": "Integrate a feature/page into paraglide i18n",
+      "tags": ["i18n", "svelte"],
+      "files": [
+        { "src": "items/claude/commands/i18n/i18n.md", "target": ".claude/commands/i18n.md" }
+      ],
+      "dependencies": ["scope-by-recent-changes-script"]
+    },
+    {
+      "name": "ideate",
+      "tool": "claude",
+      "type": "command",
+      "description": "Brainstorm feature ideas based on current codebase scope",
+      "tags": ["ideation", "planning"],
+      "files": [
+        { "src": "items/claude/commands/ideate/ideate.md", "target": ".claude/commands/ideate.md" }
+      ],
+      "dependencies": ["scope-by-staged-script", "scope-by-recent-changes-script"]
+    },
+    {
+      "name": "load-arch",
+      "tool": "claude",
+      "type": "command",
+      "description": "Load UI architectural patterns and component conventions into context",
+      "tags": ["architecture", "svelte"],
+      "files": [
+        { "src": "items/claude/commands/load-arch/load-arch.md", "target": ".claude/commands/load-arch.md" }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "rm-dead-code",
+      "tool": "claude",
+      "type": "command",
+      "description": "Remove unused imports, functions, variables, and unreachable code",
+      "tags": ["cleanup", "refactoring"],
+      "files": [
+        { "src": "items/claude/commands/rm-dead-code/rm-dead-code.md", "target": ".claude/commands/rm-dead-code.md" }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "check-bundle-impact",
+      "tool": "claude",
+      "type": "command",
+      "description": "Flag heavy/large package imports in frontend files",
+      "tags": ["performance", "bundle"],
+      "files": [
+        { "src": "items/claude/commands/check-bundle-impact/check-bundle-impact.md", "target": ".claude/commands/check-bundle-impact.md" }
+      ],
+      "dependencies": ["check-bundle-impact-script"]
+    },
+    {
+      "name": "walkthrough",
+      "tool": "claude",
+      "type": "command",
+      "description": "Create a new walkthrough for a route with data-wt attributes and i18n",
+      "tags": ["ux", "i18n", "svelte"],
+      "files": [
+        { "src": "items/claude/commands/walkthrough/walkthrough.md", "target": ".claude/commands/walkthrough.md" }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "scope-by-staged",
+      "tool": "claude",
+      "type": "command",
+      "description": "Show staged files grouped by area + follow-on command",
+      "tags": ["scoping", "git"],
+      "files": [
+        { "src": "items/claude/commands/scope-by-staged/scope-by-staged.md", "target": ".claude/commands/scope-by-staged.md" }
+      ],
+      "dependencies": ["scope-by-staged-script"]
+    },
+    {
+      "name": "scope-by-flagged-todos",
+      "tool": "claude",
+      "type": "command",
+      "description": "Show files with TODO/FIXME/HACK comments grouped by area",
+      "tags": ["scoping", "cleanup"],
+      "files": [
+        { "src": "items/claude/commands/scope-by-flagged-todos/scope-by-flagged-todos.md", "target": ".claude/commands/scope-by-flagged-todos.md" }
+      ],
+      "dependencies": ["scope-by-flagged-todos-script"]
+    },
+    {
+      "name": "scope-by-large-files",
+      "tool": "claude",
+      "type": "command",
+      "description": "Show files above a line threshold — refactoring candidates",
+      "tags": ["scoping", "refactoring"],
+      "files": [
+        { "src": "items/claude/commands/scope-by-large-files/scope-by-large-files.md", "target": ".claude/commands/scope-by-large-files.md" }
+      ],
+      "dependencies": ["scope-by-large-files-script"]
+    },
+    {
+      "name": "scope-by-recent-changes",
+      "tool": "claude",
+      "type": "command",
+      "description": "Show recently changed files grouped by area + follow-on command",
+      "tags": ["scoping", "git"],
+      "files": [
+        { "src": "items/claude/commands/scope-by-recent-changes/scope-by-recent-changes.md", "target": ".claude/commands/scope-by-recent-changes.md" }
+      ],
+      "dependencies": ["scope-by-recent-changes-script"]
+    },
+    {
+      "name": "notify-toast-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: Windows toast notification when Claude finishes",
+      "tags": ["notification", "wsl"],
+      "files": [
+        { "src": "items/claude/scripts/notify-toast/notify-toast.sh", "target": ".claude/scripts/notify-toast.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "notify-done-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: Voice notification when Claude finishes (WSL/Linux)",
+      "tags": ["notification", "wsl"],
+      "files": [
+        { "src": "items/claude/scripts/notify-done/notify-done.sh", "target": ".claude/scripts/notify-done.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "scope-by-staged-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: list staged files grouped by area",
+      "tags": ["scoping"],
+      "files": [
+        { "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh", "target": ".claude/scripts/scope-by-staged.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "scope-by-flagged-todos-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: list files with TODO/FIXME/HACK grouped by area",
+      "tags": ["scoping"],
+      "files": [
+        { "src": "items/claude/scripts/scope-by-flagged-todos/scope-by-flagged-todos.sh", "target": ".claude/scripts/scope-by-flagged-todos.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "scope-by-large-files-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: list source files above a line threshold grouped by area",
+      "tags": ["scoping"],
+      "files": [
+        { "src": "items/claude/scripts/scope-by-large-files/scope-by-large-files.sh", "target": ".claude/scripts/scope-by-large-files.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "scope-by-recent-changes-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: list recently changed files grouped by area",
+      "tags": ["scoping"],
+      "files": [
+        { "src": "items/claude/scripts/scope-by-recent-changes/scope-by-recent-changes.sh", "target": ".claude/scripts/scope-by-recent-changes.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "check-bundle-impact-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: find frontend files importing known heavy packages",
+      "tags": ["performance", "bundle"],
+      "files": [
+        { "src": "items/claude/scripts/check-bundle-impact/check-bundle-impact.sh", "target": ".claude/scripts/check-bundle-impact.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "generate-api",
+      "tool": "claude",
+      "type": "skill",
+      "description": "Generate frontend API module from an OpenAPI JSON excerpt",
+      "tags": ["api", "codegen"],
+      "files": [
+        { "src": "items/claude/skills/generate-api/SKILL.md", "target": ".claude/skills/generate-api/SKILL.md" }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "stop-notify-toast",
+      "tool": "claude",
+      "type": "hook",
+      "description": "Hook: show Windows toast when Claude stops responding",
+      "tags": ["notification", "wsl"],
+      "files": [
+        { "src": "items/claude/hooks/stop-notify-toast/hook.json", "target": "" }
+      ],
+      "dependencies": ["notify-toast-script"],
+      "hookMerge": {
+        "event": "Stop",
+        "entry": {
+          "matcher": "",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "bash .claude/scripts/notify-toast.sh"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "post-edit-prettier",
+      "tool": "claude",
+      "type": "hook",
+      "description": "Hook: run prettier on files after Edit/Write tool use",
+      "tags": ["formatting"],
+      "files": [
+        { "src": "items/claude/hooks/post-edit-prettier/hook.json", "target": "" }
+      ],
+      "dependencies": [],
+      "hookMerge": {
+        "event": "PostToolUse",
+        "entry": {
+          "matcher": "Edit|Write",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "npx prettier --write $CLAUDE_FILE_PATH"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

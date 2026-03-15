@@ -1,0 +1,12 @@
+{
+  "event": "Stop",
+  "entry": {
+    "matcher": "",
+    "hooks": [
+      {
+        "type": "command",
+        "command": "bash .claude/scripts/notify-toast.sh"
+      }
+    ]
+  }
+}
