@@ -4,14 +4,16 @@ A shadcn-style registry for Claude Code commands, scripts, skills, and hooks. Br
 
 ## Install
 
-Clone the repo and add `arcane` to your PATH:
+```bash
+go install github.com/bensch98/arcane@latest && sudo mv "$(go env GOPATH)/bin/arcane" /usr/local/bin/
+```
+
+Or build from source:
 
 ```bash
 git clone <repo-url> ~/repos/arcane
-export PATH="$HOME/repos/arcane:$PATH"
+cd ~/repos/arcane && make && sudo cp arcane /usr/local/bin/
 ```
-
-Requires `jq`.
 
 ## Usage
 
@@ -25,11 +27,15 @@ arcane list i18n
 # View item details
 arcane info commit-message
 
-# Install an item (+ dependencies) into the current project
-arcane init                          # creates .arcane.json tracking file
-arcane add commit-message
-arcane add i18n --global             # install to ~/.claude instead
-arcane add walkthrough --dry-run     # preview without writing files
+# Install items (+ dependencies) into the current project
+arcane init                                    # creates .arcane.json tracking file
+arcane add command commit-message              # install a single command
+arcane add command commit-message i18n ideate  # install multiple at once
+arcane add hook stop-notify-toast              # install a hook
+arcane add all                                 # install everything
+arcane add sync                                # reinstall items from .arcane.json
+arcane add command i18n --global               # install to ~/.claude instead
+arcane add command walkthrough --dry-run       # preview without writing files
 
 # Update registry and check for outdated items
 arcane update
@@ -89,7 +95,7 @@ arcane remove commit-message
 
 ## How It Works
 
-Items are defined in `registry.json` with their source files, target paths, dependencies, and install hooks. When you run `arcane add <name>`, the CLI:
+Items are defined in `registry.json` with their source files, target paths, dependencies, and install hooks. When you run `arcane add <type> <name...>`, the CLI:
 
 1. Resolves the dependency tree (topological sort)
 2. Copies source files to their target locations (`.claude/commands/`, `.claude/scripts/`, etc.)

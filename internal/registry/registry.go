@@ -69,6 +69,36 @@ func (r *Registry) ResolveDeps(name string) ([]string, error) {
 	return result, nil
 }
 
+// ItemsByType returns all items matching the given type.
+func (r *Registry) ItemsByType(typ string) []Item {
+	var result []Item
+	for _, item := range r.Items {
+		if item.Type == typ {
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
+// ResolveMultipleDeps resolves dependencies for multiple items, deduplicating.
+func (r *Registry) ResolveMultipleDeps(names []string) ([]string, error) {
+	seen := map[string]bool{}
+	var result []string
+	for _, name := range names {
+		deps, err := r.ResolveDeps(name)
+		if err != nil {
+			return nil, err
+		}
+		for _, d := range deps {
+			if !seen[d] {
+				seen[d] = true
+				result = append(result, d)
+			}
+		}
+	}
+	return result, nil
+}
+
 // FindRegistryDir locates the registry directory.
 // Priority: $ARCANE_REGISTRY, then directory containing the binary, then ~/repos/arcane.
 func FindRegistryDir() (string, error) {
