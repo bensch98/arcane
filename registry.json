@@ -100,6 +100,17 @@
       "dependencies": ["scope-by-staged-script"]
     },
     {
+      "name": "scope-by-unstaged",
+      "tool": "claude",
+      "type": "command",
+      "description": "Show unstaged files grouped by area + follow-on command",
+      "tags": ["scoping", "git"],
+      "files": [
+        { "src": "items/claude/commands/scope-by-unstaged/scope-by-unstaged.md", "target": ".claude/commands/scope-by-unstaged.md" }
+      ],
+      "dependencies": ["scope-by-unstaged-script"]
+    },
+    {
       "name": "scope-by-flagged-todos",
       "tool": "claude",
       "type": "command",
@@ -162,6 +173,17 @@
       "tags": ["scoping"],
       "files": [
         { "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh", "target": ".claude/scripts/scope-by-staged.sh" }
+      ],
+      "postInstall": "chmod +x"
+    },
+    {
+      "name": "scope-by-unstaged-script",
+      "tool": "claude",
+      "type": "script",
+      "description": "Bash: list unstaged files grouped by area",
+      "tags": ["scoping"],
+      "files": [
+        { "src": "items/claude/scripts/scope-by-unstaged/scope-by-unstaged.sh", "target": ".claude/scripts/scope-by-unstaged.sh" }
       ],
       "postInstall": "chmod +x"
     },
