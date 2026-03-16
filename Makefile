@@ -1,5 +1,7 @@
 BINARY  := arcane
-GOFLAGS := -trimpath
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+LDFLAGS := -s -w -X github.com/bensch98/arcane/cmd.Version=$(VERSION)
+GOFLAGS := -trimpath -ldflags '$(LDFLAGS)'
 
 .PHONY: all build test clean install
 

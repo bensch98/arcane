@@ -4,14 +4,28 @@ A shadcn-style registry for Claude Code commands, scripts, skills, and hooks. Br
 
 ## Install
 
+Download the latest binary from [GitHub Releases](https://github.com/bensch98/arcane/releases):
+
 ```bash
-go install github.com/bensch98/arcane@latest && sudo mv "$(go env GOPATH)/bin/arcane" /usr/local/bin/
+# Linux (amd64)
+curl -fsSL https://github.com/bensch98/arcane/releases/latest/download/arcane-linux-amd64 -o arcane
+chmod +x arcane && sudo mv arcane /usr/local/bin/
+
+# macOS (Apple Silicon)
+curl -fsSL https://github.com/bensch98/arcane/releases/latest/download/arcane-darwin-arm64 -o arcane
+chmod +x arcane && sudo mv arcane /usr/local/bin/
+```
+
+Or via `go install`:
+
+```bash
+go install github.com/bensch98/arcane@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone <repo-url> ~/repos/arcane
+git clone git@github.com:bensch98/arcane.git ~/repos/arcane
 cd ~/repos/arcane && make && sudo cp arcane /usr/local/bin/
 ```
 
@@ -42,6 +56,10 @@ arcane update
 
 # Remove an installed item
 arcane remove commit-message
+
+# Upgrade the CLI itself
+arcane version                                 # print current version
+arcane upgrade                                 # download latest release from GitHub
 ```
 
 ## Available Items
@@ -60,6 +78,7 @@ arcane remove commit-message
 | `scope-by-staged` | Show staged files grouped by area + follow-on command |
 | `scope-by-flagged-todos` | Show files with TODO/FIXME/HACK comments grouped by area |
 | `scope-by-large-files` | Show files above a line threshold -- refactoring candidates |
+| `scope-by-unstaged` | Show unstaged files grouped by area + follow-on command |
 | `scope-by-recent-changes` | Show recently changed files grouped by area + follow-on command |
 
 ### Scripts
@@ -71,6 +90,7 @@ arcane remove commit-message
 | `scope-by-staged-script` | List staged files grouped by area |
 | `scope-by-flagged-todos-script` | List files with TODO/FIXME/HACK grouped by area |
 | `scope-by-large-files-script` | List source files above a line threshold grouped by area |
+| `scope-by-unstaged-script` | List unstaged files grouped by area |
 | `scope-by-recent-changes-script` | List recently changed files grouped by area |
 | `check-bundle-impact-script` | Find frontend files importing known heavy packages |
 
