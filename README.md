@@ -29,6 +29,19 @@ git clone git@github.com:bensch98/arcane.git ~/repos/arcane
 cd ~/repos/arcane && make && sudo cp arcane /usr/local/bin/
 ```
 
+## Dev
+
+```bash
+# Check latest tag
+git tag --sort=-v:refname | head -1
+
+# Tag a new release and push to trigger the release workflow
+git tag v0.0.2
+git push origin v0.0.2
+```
+
+Pushing a `v*` tag builds cross-platform binaries and creates a GitHub Release automatically.
+
 ## Usage
 
 ```bash

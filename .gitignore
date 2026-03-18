@@ -1,5 +1,11 @@
+# Claude Code
 .claude/
 .arcane.json
 
 # Go build output
 /arcane
+
+# Vim swap files
+*.swp
+*.swo
+*~
