@@ -35,6 +35,91 @@ func (r *Registry) FindItem(name string) *Item {
 	return nil
 }
 
+// FindItemForTool returns the item with the given name only if it supports the given tool.
+func (r *Registry) FindItemForTool(name, tool string) *Item {
+	item := r.FindItem(name)
+	if item == nil {
+		return nil
+	}
+	if !item.Tool.Contains(tool) {
+		return nil
+	}
+	return item
+}
+
+// ItemsForTool returns all items that support the given tool.
+func (r *Registry) ItemsForTool(tool string) []Item {
+	var result []Item
+	for _, item := range r.Items {
+		if item.Tool.Contains(tool) {
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
+// ValidTypesForTool returns the set of valid type names for a given tool.
+func (r *Registry) ValidTypesForTool(tool string) map[string]bool {
+	types := make(map[string]bool)
+	td, ok := r.Tools[tool]
+	if !ok {
+		return types
+	}
+	for typeName := range td.Types {
+		types[typeName] = true
+	}
+	return types
+}
+
+// ToolDirs returns the config directory names that indicate a tool is configured
+// in the project. Used for auto-detection.
+func ToolDirs() map[string]string {
+	return map[string]string{
+		"claude":   ".claude",
+		"opencode": ".opencode",
+	}
+}
+
+// DetectTools returns which tools are configured in the given project root
+// by checking for their config directories.
+func DetectTools(projectRoot string) []string {
+	var tools []string
+	for tool, dir := range ToolDirs() {
+		if _, err := os.Stat(filepath.Join(projectRoot, dir)); err == nil {
+			tools = append(tools, tool)
+		}
+	}
+	return tools
+}
+
+// FilesForTool filters an item's file refs for a specific tool.
+// Returns file refs that either have no tool restriction or match the given tool.
+func FilesForTool(item *Item, tool string) []FileRef {
+	var result []FileRef
+	for _, f := range item.Files {
+		if f.Tool == "" || f.Tool == tool {
+			result = append(result, f)
+		}
+	}
+	return result
+}
+
+// SettingsFileForTool returns the settings/config file path for a given item type and tool.
+func (r *Registry) SettingsFileForTool(tool, itemType string) string {
+	td, ok := r.Tools[tool]
+	if !ok {
+		return ""
+	}
+	typeDef, ok := td.Types[itemType]
+	if !ok {
+		return ""
+	}
+	if typeDef.SettingsFile != "" {
+		return typeDef.SettingsFile
+	}
+	return typeDef.ConfigFile
+}
+
 // ResolveDeps returns items in topological (dependency-first) order.
 func (r *Registry) ResolveDeps(name string) ([]string, error) {
 	visited := map[string]bool{}
@@ -176,4 +261,3 @@ func EnsureRegistry() (string, bool, error) {
 
 	return cacheDir, true, nil
 }
-

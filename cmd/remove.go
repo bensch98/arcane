@@ -33,7 +33,11 @@ var removeCmd = &cobra.Command{
 			ui.Die("Item '%s' is not tracked in %s.", name, trackingPath)
 		}
 
-		fmt.Printf("%s %s\n", ui.Bold("Removing:"), name)
+		fmt.Printf("%s %s", ui.Bold("Removing:"), name)
+		if tracked.Tool != "" {
+			fmt.Printf(" [%s]", tracked.Tool)
+		}
+		fmt.Println()
 
 		// Delete tracked files
 		for _, f := range tracked.Files {
@@ -45,15 +49,43 @@ var removeCmd = &cobra.Command{
 			}
 		}
 
-		// Handle hook removal
+		// Handle hook removal (Claude Code)
 		item := reg.FindItem(name)
 		if item != nil && item.Type == "hook" && item.HookMerge != nil {
-			settingsPath := filepath.Join(".claude", "settings.json")
+			tool := tracked.Tool
+			if tool == "" {
+				tool = "claude" // backward compat
+			}
+			settingsFile := reg.SettingsFileForTool(tool, "hook")
+			if settingsFile == "" {
+				settingsFile = ".claude/settings.json"
+			}
+			settingsPath := filepath.Join(".", settingsFile)
 			if _, err := os.Stat(settingsPath); err == nil {
 				if err := installer.RemoveHook(settingsPath, item.HookMerge); err != nil {
 					fmt.Printf("  %s could not clean hook: %v\n", ui.Yellow("warning:"), err)
 				} else {
 					fmt.Printf("  %s %s from %s\n", ui.Red("removed hook:"), item.HookMerge.Event, settingsPath)
+				}
+			}
+		}
+
+		// Handle config removal (OpenCode)
+		if item != nil && (item.Type == "formatter" || item.Type == "config-merge") && item.ConfigMerge != nil {
+			tool := tracked.Tool
+			if tool == "" {
+				tool = "opencode"
+			}
+			configFile := reg.SettingsFileForTool(tool, item.Type)
+			if configFile == "" {
+				configFile = "opencode.json"
+			}
+			configPath := filepath.Join(".", configFile)
+			if _, err := os.Stat(configPath); err == nil {
+				if err := installer.RemoveConfig(configPath, item.ConfigMerge); err != nil {
+					fmt.Printf("  %s could not clean config: %v\n", ui.Yellow("warning:"), err)
+				} else {
+					fmt.Printf("  %s %s from %s\n", ui.Red("removed config:"), item.ConfigMerge.Path, configPath)
 				}
 			}
 		}

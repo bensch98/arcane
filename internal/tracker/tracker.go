@@ -33,21 +33,24 @@ func Save(path string, tf *registry.TrackingFile) error {
 }
 
 // Track adds or updates an installed item in the tracking file.
-func Track(path string, name string, version string, files []string) error {
+// The tool parameter identifies which tool (claude, opencode) this was installed for.
+func Track(path string, name string, tool string, version string, files []string) error {
 	tf, err := Load(path)
 	if err != nil {
 		return err
 	}
 
-	// Remove existing entry for this name
+	// Remove existing entry for this name+tool combination
 	filtered := make([]registry.InstalledItem, 0, len(tf.Installed))
 	for _, item := range tf.Installed {
-		if item.Name != name {
-			filtered = append(filtered, item)
+		if item.Name == name && (item.Tool == tool || item.Tool == "") {
+			continue
 		}
+		filtered = append(filtered, item)
 	}
 	filtered = append(filtered, registry.InstalledItem{
 		Name:    name,
+		Tool:    tool,
 		Version: version,
 		Files:   files,
 	})

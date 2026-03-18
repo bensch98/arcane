@@ -25,12 +25,12 @@ var listCmd = &cobra.Command{
 		}
 
 		type entry struct {
-			typ, name, desc string
+			typ, name, desc, tools string
 		}
 		var entries []entry
 
 		for _, item := range reg.Items {
-			if listToolFlag != "" && item.Tool != listToolFlag {
+			if listToolFlag != "" && !item.Tool.Contains(listToolFlag) {
 				continue
 			}
 			if listTypeFlag != "" && item.Type != listTypeFlag {
@@ -46,7 +46,7 @@ var listCmd = &cobra.Command{
 					continue
 				}
 			}
-			entries = append(entries, entry{item.Type, item.Name, item.Description})
+			entries = append(entries, entry{item.Type, item.Name, item.Description, item.Tool.String()})
 		}
 
 		if len(entries) == 0 {
@@ -70,13 +70,14 @@ var listCmd = &cobra.Command{
 				fmt.Println(ui.Bold(e.typ + "s"))
 				currentType = e.typ
 			}
-			fmt.Printf("  %-30s %s\n", ui.Cyan(e.name), e.desc)
+			toolBadge := ui.Dim("[" + e.tools + "]")
+			fmt.Printf("  %-30s %s %s\n", ui.Cyan(e.name), toolBadge, e.desc)
 		}
 	},
 }
 
 func init() {
-	listCmd.Flags().StringVar(&listToolFlag, "tool", "", "Filter by tool (e.g. claude)")
-	listCmd.Flags().StringVar(&listTypeFlag, "type", "", "Filter by type (e.g. command, script, hook)")
+	listCmd.Flags().StringVar(&listToolFlag, "tool", "", "Filter by tool (e.g. claude, opencode)")
+	listCmd.Flags().StringVar(&listTypeFlag, "type", "", "Filter by type (e.g. command, script, hook, formatter, plugin)")
 	rootCmd.AddCommand(listCmd)
 }

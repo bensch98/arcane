@@ -143,3 +143,82 @@ func TestRemoveHook(t *testing.T) {
 		t.Errorf("expected 0 entries after removal, got %d", len(stopArr))
 	}
 }
+
+func TestMergeConfig(t *testing.T) {
+	dir := t.TempDir()
+	configPath := filepath.Join(dir, "opencode.json")
+
+	cm := &registry.ConfigMerge{
+		Path: "formatter.prettier",
+		Value: map[string]interface{}{
+			"command":    []interface{}{"npx", "prettier", "--write", "$FILE"},
+			"extensions": []interface{}{".js", ".ts"},
+		},
+	}
+
+	rb := NewRollback()
+
+	// First merge — should create the file
+	if err := MergeConfig(configPath, cm, false, rb); err != nil {
+		t.Fatalf("MergeConfig failed: %v", err)
+	}
+
+	data, _ := os.ReadFile(configPath)
+	var config map[string]interface{}
+	json.Unmarshal(data, &config)
+
+	// Check $schema was added
+	if config["$schema"] != "https://opencode.ai/config.json" {
+		t.Error("expected $schema to be set for opencode.json")
+	}
+
+	// Check nested path was created
+	formatter, ok := config["formatter"].(map[string]interface{})
+	if !ok {
+		t.Fatal("expected formatter key to be a map")
+	}
+	prettier, ok := formatter["prettier"].(map[string]interface{})
+	if !ok {
+		t.Fatal("expected formatter.prettier key to be a map")
+	}
+	cmd, ok := prettier["command"].([]interface{})
+	if !ok {
+		t.Fatal("expected formatter.prettier.command to be an array")
+	}
+	if len(cmd) != 4 {
+		t.Errorf("expected 4 command entries, got %d", len(cmd))
+	}
+
+	// Second merge (same entry, no force) — should skip
+	if err := MergeConfig(configPath, cm, false, rb); err != nil {
+		t.Fatalf("MergeConfig second call failed: %v", err)
+	}
+}
+
+func TestRemoveConfig(t *testing.T) {
+	dir := t.TempDir()
+	configPath := filepath.Join(dir, "opencode.json")
+
+	cm := &registry.ConfigMerge{
+		Path:  "formatter.prettier",
+		Value: map[string]interface{}{"disabled": true},
+	}
+
+	rb := NewRollback()
+	MergeConfig(configPath, cm, false, rb)
+
+	if err := RemoveConfig(configPath, cm); err != nil {
+		t.Fatalf("RemoveConfig failed: %v", err)
+	}
+
+	data, _ := os.ReadFile(configPath)
+	var config map[string]interface{}
+	json.Unmarshal(data, &config)
+	formatter, ok := config["formatter"].(map[string]interface{})
+	if !ok {
+		t.Fatal("expected formatter key to still exist")
+	}
+	if _, exists := formatter["prettier"]; exists {
+		t.Error("expected prettier key to be removed")
+	}
+}

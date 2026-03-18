@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/bensch98/arcane/internal/registry"
 	"github.com/bensch98/arcane/internal/ui"
@@ -64,7 +65,7 @@ func CopyFile(src, dst string) error {
 	return out.Close()
 }
 
-// MergeHook merges a hook entry into a settings.json file.
+// MergeHook merges a hook entry into a settings.json file (Claude Code).
 func MergeHook(settingsPath string, hm *registry.HookMerge, force bool, rb *Rollback) error {
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(settingsPath), 0755); err != nil {
@@ -136,7 +137,7 @@ func MergeHook(settingsPath string, hm *registry.HookMerge, force bool, rb *Roll
 	return os.WriteFile(settingsPath, append(out, '\n'), 0644)
 }
 
-// RemoveHook removes a matching hook entry from settings.json.
+// RemoveHook removes a matching hook entry from settings.json (Claude Code).
 func RemoveHook(settingsPath string, hm *registry.HookMerge) error {
 	data, err := os.ReadFile(settingsPath)
 	if err != nil {
@@ -188,28 +189,105 @@ func matchesEntry(existing, new map[string]interface{}) bool {
 	return string(existingMatcher) == string(newMatcher) && string(existingHooks) == string(newHooks)
 }
 
-// InstallItem installs a single item (file copy or hook merge).
-func InstallItem(item *registry.Item, registryDir, targetRoot string, force, dryRun bool, rb *Rollback) ([]string, error) {
-	var installedFiles []string
-
-	if item.Type == "hook" {
-		if item.HookMerge == nil {
-			return nil, fmt.Errorf("hook item '%s' has no hookMerge field", item.Name)
-		}
-		settingsPath := filepath.Join(targetRoot, ".claude", "settings.json")
-		if dryRun {
-			fmt.Printf("    %s %s (event: %s)\n", ui.Dim("would merge hook into:"), settingsPath, item.HookMerge.Event)
-			return nil, nil
-		}
-		if err := MergeHook(settingsPath, item.HookMerge, force, rb); err != nil {
-			return nil, fmt.Errorf("hook merge failed: %w", err)
-		}
-		fmt.Printf("    %s %s → %s\n", ui.Green("merged hook:"), item.HookMerge.Event, settingsPath)
-		return nil, nil
+// MergeConfig merges a config entry into a JSON config file (OpenCode).
+// The path is a dot-separated key path, e.g. "formatter.prettier".
+func MergeConfig(configPath string, cm *registry.ConfigMerge, force bool, rb *Rollback) error {
+	// Ensure directory exists
+	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+		return err
 	}
 
-	// File-based items
-	for _, f := range item.Files {
+	// Read or create config
+	var config map[string]interface{}
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+		config = make(map[string]interface{})
+	} else {
+		rb.TrackSettings(configPath, data)
+		if err := json.Unmarshal(data, &config); err != nil {
+			return fmt.Errorf("invalid config JSON: %w", err)
+		}
+	}
+
+	// Navigate to the target path, creating intermediate objects as needed
+	parts := strings.Split(cm.Path, ".")
+	current := config
+	for i, part := range parts {
+		if i == len(parts)-1 {
+			// Last segment: set the value
+			if _, exists := current[part]; exists && !force {
+				// Key already exists, skip unless forced
+				return nil
+			}
+			current[part] = cm.Value
+		} else {
+			// Intermediate segment: navigate or create
+			next, ok := current[part].(map[string]interface{})
+			if !ok {
+				next = make(map[string]interface{})
+				current[part] = next
+			}
+			current = next
+		}
+	}
+
+	// Ensure $schema is present for opencode.json
+	if filepath.Base(configPath) == "opencode.json" {
+		if _, exists := config["$schema"]; !exists {
+			config["$schema"] = "https://opencode.ai/config.json"
+		}
+	}
+
+	// Write back
+	out, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(configPath, append(out, '\n'), 0644)
+}
+
+// RemoveConfig removes a config entry from a JSON config file (OpenCode).
+func RemoveConfig(configPath string, cm *registry.ConfigMerge) error {
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil // file doesn't exist, nothing to remove
+	}
+
+	var config map[string]interface{}
+	if err := json.Unmarshal(data, &config); err != nil {
+		return err
+	}
+
+	// Navigate to the parent and delete the last key
+	parts := strings.Split(cm.Path, ".")
+	current := config
+	for i, part := range parts {
+		if i == len(parts)-1 {
+			delete(current, part)
+		} else {
+			next, ok := current[part].(map[string]interface{})
+			if !ok {
+				return nil // path doesn't exist
+			}
+			current = next
+		}
+	}
+
+	out, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(configPath, append(out, '\n'), 0644)
+}
+
+// copyItemFiles copies file-based items (commands, scripts, skills, plugins).
+func copyItemFiles(item *registry.Item, files []registry.FileRef, registryDir, targetRoot string, force, dryRun bool, rb *Rollback) ([]string, error) {
+	var installedFiles []string
+
+	for _, f := range files {
 		srcPath := filepath.Join(registryDir, f.Src)
 		targetPath := filepath.Join(targetRoot, f.Target)
 
@@ -238,7 +316,7 @@ func InstallItem(item *registry.Item, registryDir, targetRoot string, force, dry
 
 	// postInstall
 	if item.PostInstall == "chmod +x" && !dryRun {
-		for _, f := range item.Files {
+		for _, f := range files {
 			targetPath := filepath.Join(targetRoot, f.Target)
 			if _, err := os.Stat(targetPath); err == nil {
 				os.Chmod(targetPath, 0755)
@@ -250,4 +328,54 @@ func InstallItem(item *registry.Item, registryDir, targetRoot string, force, dry
 	}
 
 	return installedFiles, nil
+}
+
+// InstallItem installs a single item for a specific tool (file copy, hook merge, or config merge).
+func InstallItem(item *registry.Item, reg *registry.Registry, registryDir, targetRoot, targetTool string, force, dryRun bool, rb *Rollback) ([]string, error) {
+	// Filter files for this tool
+	files := registry.FilesForTool(item, targetTool)
+
+	switch item.Type {
+	case "hook":
+		if item.HookMerge == nil {
+			return nil, fmt.Errorf("hook item '%s' has no hookMerge field", item.Name)
+		}
+		settingsFile := reg.SettingsFileForTool(targetTool, "hook")
+		if settingsFile == "" {
+			settingsFile = ".claude/settings.json" // fallback for backward compat
+		}
+		settingsPath := filepath.Join(targetRoot, settingsFile)
+		if dryRun {
+			fmt.Printf("    %s %s (event: %s)\n", ui.Dim("would merge hook into:"), settingsPath, item.HookMerge.Event)
+			return nil, nil
+		}
+		if err := MergeHook(settingsPath, item.HookMerge, force, rb); err != nil {
+			return nil, fmt.Errorf("hook merge failed: %w", err)
+		}
+		fmt.Printf("    %s %s → %s\n", ui.Green("merged hook:"), item.HookMerge.Event, settingsPath)
+		return nil, nil
+
+	case "formatter", "config-merge":
+		if item.ConfigMerge == nil {
+			return nil, fmt.Errorf("config item '%s' has no configMerge field", item.Name)
+		}
+		configFile := reg.SettingsFileForTool(targetTool, item.Type)
+		if configFile == "" {
+			configFile = "opencode.json" // fallback
+		}
+		configPath := filepath.Join(targetRoot, configFile)
+		if dryRun {
+			fmt.Printf("    %s %s (path: %s)\n", ui.Dim("would merge config into:"), configPath, item.ConfigMerge.Path)
+			return nil, nil
+		}
+		if err := MergeConfig(configPath, item.ConfigMerge, force, rb); err != nil {
+			return nil, fmt.Errorf("config merge failed: %w", err)
+		}
+		fmt.Printf("    %s %s → %s\n", ui.Green("merged config:"), item.ConfigMerge.Path, configPath)
+		return nil, nil
+
+	default:
+		// File-based items: command, script, skill, plugin
+		return copyItemFiles(item, files, registryDir, targetRoot, force, dryRun, rb)
+	}
 }

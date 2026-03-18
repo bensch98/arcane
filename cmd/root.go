@@ -20,7 +20,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "arcane",
 	Short: "Agentic Registry CLI",
-	Long:  "arcane — A shadcn-style registry for Claude Code commands, scripts, skills, and hooks.",
+	Long:  "arcane — A shadcn-style registry for AI coding agent commands, scripts, skills, hooks, and plugins.\nSupports Claude Code, OpenCode, and more.",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		// Skip registry loading for init (doesn't need it)
 		if cmd.Name() == "init" {

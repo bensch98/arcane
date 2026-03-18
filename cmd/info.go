@@ -25,7 +25,7 @@ var infoCmd = &cobra.Command{
 		fmt.Println(ui.Bold(item.Name))
 		fmt.Println(ui.Dim(item.Description))
 		fmt.Println()
-		fmt.Printf("  Tool:         %s\n", item.Tool)
+		fmt.Printf("  Tool:         %s\n", item.Tool.String())
 		fmt.Printf("  Type:         %s\n", item.Type)
 
 		if len(item.Tags) > 0 {
@@ -37,11 +37,19 @@ var infoCmd = &cobra.Command{
 
 		fmt.Println("  Files:")
 		for _, f := range item.Files {
-			fmt.Printf("  %s → %s\n", f.Src, f.Target)
+			toolLabel := ""
+			if f.Tool != "" {
+				toolLabel = fmt.Sprintf(" [%s]", f.Tool)
+			}
+			if f.Target != "" {
+				fmt.Printf("    %s → %s%s\n", f.Src, f.Target, toolLabel)
+			} else {
+				fmt.Printf("    %s%s\n", f.Src, toolLabel)
+			}
 		}
 
-		// File preview for single-file items
-		if len(item.Files) == 1 {
+		// File preview for single-file items (or first file with content)
+		if len(item.Files) >= 1 {
 			fullPath := filepath.Join(registryDir, item.Files[0].Src)
 			if f, err := os.Open(fullPath); err == nil {
 				defer f.Close()
@@ -63,13 +71,19 @@ var infoCmd = &cobra.Command{
 			}
 		}
 
-		// Hook info
+		// Hook info (Claude Code)
 		if item.Type == "hook" && item.HookMerge != nil {
 			fmt.Println()
 			fmt.Printf("  Hook event:   %s\n", item.HookMerge.Event)
 			if matcher, ok := item.HookMerge.Entry["matcher"].(string); ok && matcher != "" {
 				fmt.Printf("  Matcher:      %s\n", matcher)
 			}
+		}
+
+		// Config merge info (OpenCode)
+		if (item.Type == "formatter" || item.Type == "config-merge") && item.ConfigMerge != nil {
+			fmt.Println()
+			fmt.Printf("  Config path:  %s\n", item.ConfigMerge.Path)
 		}
 	},
 }
