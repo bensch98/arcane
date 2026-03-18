@@ -5,7 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
+
+	"github.com/bensch98/arcane/internal/git"
 )
+
+const DefaultRegistryURL = "https://github.com/bensch98/arcane.git"
 
 // Load reads and parses a registry.json file.
 func Load(path string) (*Registry, error) {
@@ -129,6 +134,46 @@ func FindRegistryDir() (string, error) {
 		return def, nil
 	}
 
-	return "", fmt.Errorf("registry not found. Set ARCANE_REGISTRY env var to your registry path")
+	// 4. Check cache directory
+	cacheDir := CacheDir()
+	if _, err := os.Stat(filepath.Join(cacheDir, "registry.json")); err == nil {
+		return cacheDir, nil
+	}
+
+	return "", fmt.Errorf("registry not found. Run 'arcane registry fetch' or set ARCANE_REGISTRY env var")
+}
+
+// CacheDir returns the platform-specific cache directory for the registry.
+func CacheDir() string {
+	home, _ := os.UserHomeDir()
+	if runtime.GOOS == "darwin" {
+		return filepath.Join(home, "Library", "Application Support", "arcane", "registry")
+	}
+	// Use XDG_DATA_HOME on Linux if set, otherwise ~/.local/share
+	if dataHome := os.Getenv("XDG_DATA_HOME"); dataHome != "" {
+		return filepath.Join(dataHome, "arcane", "registry")
+	}
+	return filepath.Join(home, ".local", "share", "arcane", "registry")
+}
+
+// EnsureRegistry finds or fetches the registry, returning its directory.
+// If no local registry is found, it clones the default registry to the cache directory.
+func EnsureRegistry() (string, bool, error) {
+	dir, err := FindRegistryDir()
+	if err == nil {
+		return dir, false, nil
+	}
+
+	// Auto-clone to cache dir
+	cacheDir := CacheDir()
+	if err := os.MkdirAll(filepath.Dir(cacheDir), 0755); err != nil {
+		return "", false, fmt.Errorf("cannot create cache directory: %w", err)
+	}
+
+	if err := git.Clone(DefaultRegistryURL, cacheDir); err != nil {
+		return "", false, fmt.Errorf("failed to fetch registry from %s: %w", DefaultRegistryURL, err)
+	}
+
+	return cacheDir, true, nil
 }
 

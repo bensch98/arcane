@@ -21,6 +21,12 @@ func Pull(dir string) error {
 	return cmd.Run()
 }
 
+// Clone clones a git repository into the given directory.
+func Clone(url, dest string) error {
+	cmd := exec.Command("git", "clone", "--quiet", url, dest)
+	return cmd.Run()
+}
+
 // RevParseShort returns the short HEAD SHA, or "" on error.
 func RevParseShort(dir string) string {
 	cmd := exec.Command("git", "-C", dir, "rev-parse", "--short", "HEAD")

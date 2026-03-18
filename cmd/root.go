@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/bensch98/arcane/internal/registry"
@@ -25,10 +26,14 @@ var rootCmd = &cobra.Command{
 		if cmd.Name() == "init" {
 			return
 		}
+		var fetched bool
 		var err error
-		registryDir, err = registry.FindRegistryDir()
+		registryDir, fetched, err = registry.EnsureRegistry()
 		if err != nil {
 			ui.Die("%v", err)
+		}
+		if fetched {
+			fmt.Printf("%s Fetched registry to %s\n\n", ui.Green("✓"), ui.Dim(registryDir))
 		}
 		reg, err = registry.Load(registryDir + "/registry.json")
 		if err != nil {
