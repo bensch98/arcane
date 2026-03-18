@@ -2,6 +2,9 @@
 .claude/
 .arcane.json
 
+# OpenCode
+.opencode/
+
 # Go build output
 /arcane
 
