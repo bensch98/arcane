@@ -4,7 +4,13 @@ A shadcn-style registry for Claude Code commands, scripts, skills, and hooks. Br
 
 ## Install
 
-Download the latest binary from [GitHub Releases](https://github.com/bensch98/arcane/releases):
+One-liner (auto-detects OS and architecture):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/bensch98/arcane/main/install.sh | bash
+```
+
+Or download a specific binary from [GitHub Releases](https://github.com/bensch98/arcane/releases):
 
 ```bash
 # Linux (amd64)
