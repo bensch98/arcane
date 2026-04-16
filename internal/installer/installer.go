@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/bensch98/arcane/internal/registry"
@@ -316,11 +317,13 @@ func copyItemFiles(item *registry.Item, files []registry.FileRef, registryDir, t
 
 	// postInstall
 	if item.PostInstall == "chmod +x" && !dryRun {
-		for _, f := range files {
-			targetPath := filepath.Join(targetRoot, f.Target)
-			if _, err := os.Stat(targetPath); err == nil {
-				os.Chmod(targetPath, 0755)
-				fmt.Printf("    %s\n", ui.Dim("chmod +x "+f.Target))
+		if runtime.GOOS != "windows" {
+			for _, f := range files {
+				targetPath := filepath.Join(targetRoot, f.Target)
+				if _, err := os.Stat(targetPath); err == nil {
+					os.Chmod(targetPath, 0755)
+					fmt.Printf("    %s\n", ui.Dim("chmod +x "+f.Target))
+				}
 			}
 		}
 	} else if item.PostInstall != "" && item.PostInstall != "chmod +x" && !dryRun {

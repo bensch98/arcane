@@ -231,8 +231,14 @@ func FindRegistryDir() (string, error) {
 // CacheDir returns the platform-specific cache directory for the registry.
 func CacheDir() string {
 	home, _ := os.UserHomeDir()
-	if runtime.GOOS == "darwin" {
+	switch runtime.GOOS {
+	case "darwin":
 		return filepath.Join(home, "Library", "Application Support", "arcane", "registry")
+	case "windows":
+		if local := os.Getenv("LOCALAPPDATA"); local != "" {
+			return filepath.Join(local, "arcane", "registry")
+		}
+		return filepath.Join(home, "AppData", "Local", "arcane", "registry")
 	}
 	// Use XDG_DATA_HOME on Linux if set, otherwise ~/.local/share
 	if dataHome := os.Getenv("XDG_DATA_HOME"); dataHome != "" {

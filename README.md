@@ -4,6 +4,8 @@ A shadcn-style registry for Claude Code commands, scripts, skills, and hooks. Br
 
 ## Install
 
+### Linux / macOS
+
 One-liner (auto-detects OS and architecture):
 
 ```bash
@@ -21,6 +23,24 @@ chmod +x arcane && sudo mv arcane /usr/local/bin/
 curl -fsSL https://github.com/bensch98/arcane/releases/latest/download/arcane-darwin-arm64 -o arcane
 chmod +x arcane && sudo mv arcane /usr/local/bin/
 ```
+
+### Windows (PowerShell)
+
+One-liner (auto-detects architecture, installs to `%LOCALAPPDATA%\Programs\arcane` and adds it to user PATH):
+
+```powershell
+irm https://raw.githubusercontent.com/bensch98/arcane/main/install.ps1 | iex
+```
+
+Or download a specific binary manually:
+
+```powershell
+iwr https://github.com/bensch98/arcane/releases/latest/download/arcane-windows-amd64.exe -OutFile arcane.exe
+```
+
+Prerequisites: [Git for Windows](https://git-scm.com/download/win) must be installed and `git` on PATH — `arcane` shells out to `git` to fetch the registry.
+
+### Go / source
 
 Or via `go install`:
 
@@ -131,6 +151,12 @@ arcane upgrade                                 # download latest release from Gi
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `ARCANE_REGISTRY` | `~/repos/arcane` | Path to the registry repo |
+
+If `ARCANE_REGISTRY` is unset and no local clone is found, the registry is auto-fetched into:
+
+- Linux: `$XDG_DATA_HOME/arcane/registry` or `~/.local/share/arcane/registry`
+- macOS: `~/Library/Application Support/arcane/registry`
+- Windows: `%LOCALAPPDATA%\arcane\registry`
 
 ## How It Works
 

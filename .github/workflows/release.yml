@@ -16,12 +16,22 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
+            ext: ""
           - goos: linux
             goarch: arm64
+            ext: ""
           - goos: darwin
             goarch: amd64
+            ext: ""
           - goos: darwin
             goarch: arm64
+            ext: ""
+          - goos: windows
+            goarch: amd64
+            ext: ".exe"
+          - goos: windows
+            goarch: arm64
+            ext: ".exe"
 
     steps:
       - uses: actions/checkout@v4
@@ -34,16 +44,17 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          EXT: ${{ matrix.ext }}
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           LDFLAGS="-s -w -X github.com/bensch98/arcane/cmd.Version=${VERSION}"
-          go build -trimpath -ldflags "${LDFLAGS}" -o "arcane-${GOOS}-${GOARCH}" .
+          go build -trimpath -ldflags "${LDFLAGS}" -o "arcane-${GOOS}-${GOARCH}${EXT}" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: arcane-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: arcane-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: arcane-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
 
   publish:
     needs: release

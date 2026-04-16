@@ -54,7 +54,11 @@ var upgradeCmd = &cobra.Command{
 		}
 
 		// Find the right binary for this platform.
-		wantName := fmt.Sprintf("arcane-%s-%s", runtime.GOOS, runtime.GOARCH)
+		exeSuffix := ""
+		if runtime.GOOS == "windows" {
+			exeSuffix = ".exe"
+		}
+		wantName := fmt.Sprintf("arcane-%s-%s%s", runtime.GOOS, runtime.GOARCH, exeSuffix)
 		var downloadURL string
 		for _, a := range rel.Assets {
 			if a.Name == wantName {
@@ -159,6 +163,22 @@ func replaceBinary(src, dst string) error {
 		return err
 	}
 	out.Close()
+
+	if runtime.GOOS == "windows" {
+		// Windows locks a running .exe against overwrite but allows renaming it.
+		// Move the live binary aside, then the new one into place.
+		oldPath := dst + ".old"
+		_ = os.Remove(oldPath)
+		if err := os.Rename(dst, oldPath); err != nil {
+			os.Remove(tmpDst)
+			return err
+		}
+		if err := os.Rename(tmpDst, dst); err != nil {
+			_ = os.Rename(oldPath, dst)
+			return err
+		}
+		return nil
+	}
 
 	return os.Rename(tmpDst, dst)
 }
