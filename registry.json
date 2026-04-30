@@ -28,8 +28,16 @@
       "description": "Generate a commit message for staged git changes",
       "tags": ["git"],
       "files": [
-        { "src": "items/claude/commands/commit-message/commit-message.md", "target": ".claude/commands/commit-message.md", "tool": "claude" },
-        { "src": "items/claude/commands/commit-message/commit-message.md", "target": ".opencode/commands/commit-message.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/commit-message/commit-message.md",
+          "target": ".claude/commands/commit-message.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/commit-message/commit-message.md",
+          "target": ".opencode/commands/commit-message.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": []
     },
@@ -40,8 +48,16 @@
       "description": "Integrate a feature/page into paraglide i18n",
       "tags": ["i18n", "svelte"],
       "files": [
-        { "src": "items/claude/commands/i18n/i18n.md", "target": ".claude/commands/i18n.md", "tool": "claude" },
-        { "src": "items/claude/commands/i18n/i18n.md", "target": ".opencode/commands/i18n.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/i18n/i18n.md",
+          "target": ".claude/commands/i18n.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/i18n/i18n.md",
+          "target": ".opencode/commands/i18n.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-recent-changes-script"]
     },
@@ -52,10 +68,21 @@
       "description": "Brainstorm feature ideas based on current codebase scope",
       "tags": ["ideation", "planning"],
       "files": [
-        { "src": "items/claude/commands/ideate/ideate.md", "target": ".claude/commands/ideate.md", "tool": "claude" },
-        { "src": "items/claude/commands/ideate/ideate.md", "target": ".opencode/commands/ideate.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/ideate/ideate.md",
+          "target": ".claude/commands/ideate.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/ideate/ideate.md",
+          "target": ".opencode/commands/ideate.md",
+          "tool": "opencode"
+        }
       ],
-      "dependencies": ["scope-by-staged-script", "scope-by-recent-changes-script"]
+      "dependencies": [
+        "scope-by-staged-script",
+        "scope-by-recent-changes-script"
+      ]
     },
     {
       "name": "load-arch",
@@ -64,8 +91,16 @@
       "description": "Load UI architectural patterns and component conventions into context",
       "tags": ["architecture", "svelte"],
       "files": [
-        { "src": "items/claude/commands/load-arch/load-arch.md", "target": ".claude/commands/load-arch.md", "tool": "claude" },
-        { "src": "items/claude/commands/load-arch/load-arch.md", "target": ".opencode/commands/load-arch.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/load-arch/load-arch.md",
+          "target": ".claude/commands/load-arch.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/load-arch/load-arch.md",
+          "target": ".opencode/commands/load-arch.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": []
     },
@@ -76,8 +111,16 @@
       "description": "Remove unused imports, functions, variables, and unreachable code",
       "tags": ["cleanup", "refactoring"],
       "files": [
-        { "src": "items/claude/commands/rm-dead-code/rm-dead-code.md", "target": ".claude/commands/rm-dead-code.md", "tool": "claude" },
-        { "src": "items/claude/commands/rm-dead-code/rm-dead-code.md", "target": ".opencode/commands/rm-dead-code.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/rm-dead-code/rm-dead-code.md",
+          "target": ".claude/commands/rm-dead-code.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/rm-dead-code/rm-dead-code.md",
+          "target": ".opencode/commands/rm-dead-code.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": []
     },
@@ -88,8 +131,16 @@
       "description": "Flag heavy/large package imports in frontend files",
       "tags": ["performance", "bundle"],
       "files": [
-        { "src": "items/claude/commands/check-bundle-impact/check-bundle-impact.md", "target": ".claude/commands/check-bundle-impact.md", "tool": "claude" },
-        { "src": "items/claude/commands/check-bundle-impact/check-bundle-impact.md", "target": ".opencode/commands/check-bundle-impact.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/check-bundle-impact/check-bundle-impact.md",
+          "target": ".claude/commands/check-bundle-impact.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/check-bundle-impact/check-bundle-impact.md",
+          "target": ".opencode/commands/check-bundle-impact.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["check-bundle-impact-script"]
     },
@@ -100,8 +151,16 @@
       "description": "Create a new walkthrough for a route with data-wt attributes and i18n",
       "tags": ["ux", "i18n", "svelte"],
       "files": [
-        { "src": "items/claude/commands/walkthrough/walkthrough.md", "target": ".claude/commands/walkthrough.md", "tool": "claude" },
-        { "src": "items/claude/commands/walkthrough/walkthrough.md", "target": ".opencode/commands/walkthrough.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/walkthrough/walkthrough.md",
+          "target": ".claude/commands/walkthrough.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/walkthrough/walkthrough.md",
+          "target": ".opencode/commands/walkthrough.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": []
     },
@@ -112,8 +171,16 @@
       "description": "Show staged files grouped by area + follow-on command",
       "tags": ["scoping", "git"],
       "files": [
-        { "src": "items/claude/commands/scope-by-staged/scope-by-staged.md", "target": ".claude/commands/scope-by-staged.md", "tool": "claude" },
-        { "src": "items/claude/commands/scope-by-staged/scope-by-staged.md", "target": ".opencode/commands/scope-by-staged.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/scope-by-staged/scope-by-staged.md",
+          "target": ".claude/commands/scope-by-staged.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/scope-by-staged/scope-by-staged.md",
+          "target": ".opencode/commands/scope-by-staged.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-staged-script"]
     },
@@ -124,10 +191,38 @@
       "description": "Show unstaged files grouped by area + follow-on command",
       "tags": ["scoping", "git"],
       "files": [
-        { "src": "items/claude/commands/scope-by-unstaged/scope-by-unstaged.md", "target": ".claude/commands/scope-by-unstaged.md", "tool": "claude" },
-        { "src": "items/claude/commands/scope-by-unstaged/scope-by-unstaged.md", "target": ".opencode/commands/scope-by-unstaged.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/scope-by-unstaged/scope-by-unstaged.md",
+          "target": ".claude/commands/scope-by-unstaged.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/scope-by-unstaged/scope-by-unstaged.md",
+          "target": ".opencode/commands/scope-by-unstaged.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-unstaged-script"]
+    },
+    {
+      "name": "study",
+      "tool": ["claude", "opencode"],
+      "type": "command",
+      "description": "Familiarise yourself with a set of files or a topic without making changes (read-only context loading)",
+      "tags": ["context", "read-only"],
+      "files": [
+        {
+          "src": "items/claude/commands/study/study.md",
+          "target": ".claude/commands/study.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/study/study.md",
+          "target": ".opencode/commands/study.md",
+          "tool": "opencode"
+        }
+      ],
+      "dependencies": []
     },
     {
       "name": "scope-by-flagged-todos",
@@ -136,8 +231,16 @@
       "description": "Show files with TODO/FIXME/HACK comments grouped by area",
       "tags": ["scoping", "cleanup"],
       "files": [
-        { "src": "items/claude/commands/scope-by-flagged-todos/scope-by-flagged-todos.md", "target": ".claude/commands/scope-by-flagged-todos.md", "tool": "claude" },
-        { "src": "items/claude/commands/scope-by-flagged-todos/scope-by-flagged-todos.md", "target": ".opencode/commands/scope-by-flagged-todos.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/scope-by-flagged-todos/scope-by-flagged-todos.md",
+          "target": ".claude/commands/scope-by-flagged-todos.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/scope-by-flagged-todos/scope-by-flagged-todos.md",
+          "target": ".opencode/commands/scope-by-flagged-todos.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-flagged-todos-script"]
     },
@@ -148,8 +251,16 @@
       "description": "Show files above a line threshold — refactoring candidates",
       "tags": ["scoping", "refactoring"],
       "files": [
-        { "src": "items/claude/commands/scope-by-large-files/scope-by-large-files.md", "target": ".claude/commands/scope-by-large-files.md", "tool": "claude" },
-        { "src": "items/claude/commands/scope-by-large-files/scope-by-large-files.md", "target": ".opencode/commands/scope-by-large-files.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/scope-by-large-files/scope-by-large-files.md",
+          "target": ".claude/commands/scope-by-large-files.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/scope-by-large-files/scope-by-large-files.md",
+          "target": ".opencode/commands/scope-by-large-files.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-large-files-script"]
     },
@@ -160,8 +271,16 @@
       "description": "Show recently changed files grouped by area + follow-on command",
       "tags": ["scoping", "git"],
       "files": [
-        { "src": "items/claude/commands/scope-by-recent-changes/scope-by-recent-changes.md", "target": ".claude/commands/scope-by-recent-changes.md", "tool": "claude" },
-        { "src": "items/claude/commands/scope-by-recent-changes/scope-by-recent-changes.md", "target": ".opencode/commands/scope-by-recent-changes.md", "tool": "opencode" }
+        {
+          "src": "items/claude/commands/scope-by-recent-changes/scope-by-recent-changes.md",
+          "target": ".claude/commands/scope-by-recent-changes.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/scope-by-recent-changes/scope-by-recent-changes.md",
+          "target": ".opencode/commands/scope-by-recent-changes.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": ["scope-by-recent-changes-script"]
     },
@@ -172,8 +291,16 @@
       "description": "Bash: Windows toast notification when agent finishes",
       "tags": ["notification", "wsl"],
       "files": [
-        { "src": "items/claude/scripts/notify-toast/notify-toast.sh", "target": ".claude/scripts/notify-toast.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/notify-toast/notify-toast.sh", "target": ".opencode/scripts/notify-toast.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/notify-toast/notify-toast.sh",
+          "target": ".claude/scripts/notify-toast.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/notify-toast/notify-toast.sh",
+          "target": ".opencode/scripts/notify-toast.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -184,8 +311,16 @@
       "description": "Bash: Voice notification when agent finishes (WSL/Linux)",
       "tags": ["notification", "wsl"],
       "files": [
-        { "src": "items/claude/scripts/notify-done/notify-done.sh", "target": ".claude/scripts/notify-done.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/notify-done/notify-done.sh", "target": ".opencode/scripts/notify-done.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/notify-done/notify-done.sh",
+          "target": ".claude/scripts/notify-done.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/notify-done/notify-done.sh",
+          "target": ".opencode/scripts/notify-done.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -196,8 +331,16 @@
       "description": "Bash: list staged files grouped by area",
       "tags": ["scoping"],
       "files": [
-        { "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh", "target": ".claude/scripts/scope-by-staged.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh", "target": ".opencode/scripts/scope-by-staged.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh",
+          "target": ".claude/scripts/scope-by-staged.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/scope-by-staged/scope-by-staged.sh",
+          "target": ".opencode/scripts/scope-by-staged.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -208,8 +351,16 @@
       "description": "Bash: list unstaged files grouped by area",
       "tags": ["scoping"],
       "files": [
-        { "src": "items/claude/scripts/scope-by-unstaged/scope-by-unstaged.sh", "target": ".claude/scripts/scope-by-unstaged.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/scope-by-unstaged/scope-by-unstaged.sh", "target": ".opencode/scripts/scope-by-unstaged.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/scope-by-unstaged/scope-by-unstaged.sh",
+          "target": ".claude/scripts/scope-by-unstaged.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/scope-by-unstaged/scope-by-unstaged.sh",
+          "target": ".opencode/scripts/scope-by-unstaged.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -220,8 +371,16 @@
       "description": "Bash: list files with TODO/FIXME/HACK grouped by area",
       "tags": ["scoping"],
       "files": [
-        { "src": "items/claude/scripts/scope-by-flagged-todos/scope-by-flagged-todos.sh", "target": ".claude/scripts/scope-by-flagged-todos.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/scope-by-flagged-todos/scope-by-flagged-todos.sh", "target": ".opencode/scripts/scope-by-flagged-todos.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/scope-by-flagged-todos/scope-by-flagged-todos.sh",
+          "target": ".claude/scripts/scope-by-flagged-todos.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/scope-by-flagged-todos/scope-by-flagged-todos.sh",
+          "target": ".opencode/scripts/scope-by-flagged-todos.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -232,8 +391,16 @@
       "description": "Bash: list source files above a line threshold grouped by area",
       "tags": ["scoping"],
       "files": [
-        { "src": "items/claude/scripts/scope-by-large-files/scope-by-large-files.sh", "target": ".claude/scripts/scope-by-large-files.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/scope-by-large-files/scope-by-large-files.sh", "target": ".opencode/scripts/scope-by-large-files.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/scope-by-large-files/scope-by-large-files.sh",
+          "target": ".claude/scripts/scope-by-large-files.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/scope-by-large-files/scope-by-large-files.sh",
+          "target": ".opencode/scripts/scope-by-large-files.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -244,8 +411,16 @@
       "description": "Bash: list recently changed files grouped by area",
       "tags": ["scoping"],
       "files": [
-        { "src": "items/claude/scripts/scope-by-recent-changes/scope-by-recent-changes.sh", "target": ".claude/scripts/scope-by-recent-changes.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/scope-by-recent-changes/scope-by-recent-changes.sh", "target": ".opencode/scripts/scope-by-recent-changes.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/scope-by-recent-changes/scope-by-recent-changes.sh",
+          "target": ".claude/scripts/scope-by-recent-changes.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/scope-by-recent-changes/scope-by-recent-changes.sh",
+          "target": ".opencode/scripts/scope-by-recent-changes.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -256,8 +431,16 @@
       "description": "Bash: find frontend files importing known heavy packages",
       "tags": ["performance", "bundle"],
       "files": [
-        { "src": "items/claude/scripts/check-bundle-impact/check-bundle-impact.sh", "target": ".claude/scripts/check-bundle-impact.sh", "tool": "claude" },
-        { "src": "items/claude/scripts/check-bundle-impact/check-bundle-impact.sh", "target": ".opencode/scripts/check-bundle-impact.sh", "tool": "opencode" }
+        {
+          "src": "items/claude/scripts/check-bundle-impact/check-bundle-impact.sh",
+          "target": ".claude/scripts/check-bundle-impact.sh",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/scripts/check-bundle-impact/check-bundle-impact.sh",
+          "target": ".opencode/scripts/check-bundle-impact.sh",
+          "tool": "opencode"
+        }
       ],
       "postInstall": "chmod +x"
     },
@@ -268,8 +451,16 @@
       "description": "Generate frontend API module from an OpenAPI JSON excerpt",
       "tags": ["api", "codegen"],
       "files": [
-        { "src": "items/claude/skills/generate-api/SKILL.md", "target": ".claude/skills/generate-api/SKILL.md", "tool": "claude" },
-        { "src": "items/claude/skills/generate-api/SKILL.md", "target": ".opencode/skills/generate-api/SKILL.md", "tool": "opencode" }
+        {
+          "src": "items/claude/skills/generate-api/SKILL.md",
+          "target": ".claude/skills/generate-api/SKILL.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/skills/generate-api/SKILL.md",
+          "target": ".opencode/skills/generate-api/SKILL.md",
+          "tool": "opencode"
+        }
       ],
       "dependencies": []
     },
@@ -280,7 +471,10 @@
       "description": "Hook: show Windows toast when Claude stops responding",
       "tags": ["notification", "wsl"],
       "files": [
-        { "src": "items/claude/hooks/stop-notify-toast/hook.json", "target": "" }
+        {
+          "src": "items/claude/hooks/stop-notify-toast/hook.json",
+          "target": ""
+        }
       ],
       "dependencies": ["notify-toast-script"],
       "hookMerge": {
@@ -303,7 +497,10 @@
       "description": "Hook: run prettier on files after Edit/Write tool use",
       "tags": ["formatting"],
       "files": [
-        { "src": "items/claude/hooks/post-edit-prettier/hook.json", "target": "" }
+        {
+          "src": "items/claude/hooks/post-edit-prettier/hook.json",
+          "target": ""
+        }
       ],
       "dependencies": [],
       "hookMerge": {
@@ -326,7 +523,10 @@
       "description": "Plugin: show toast notification when OpenCode session goes idle",
       "tags": ["notification", "wsl"],
       "files": [
-        { "src": "items/opencode/plugins/notify-toast/notify-toast.ts", "target": ".opencode/plugins/notify-toast.ts" }
+        {
+          "src": "items/opencode/plugins/notify-toast/notify-toast.ts",
+          "target": ".opencode/plugins/notify-toast.ts"
+        }
       ],
       "dependencies": ["notify-toast-script"]
     },
@@ -337,7 +537,10 @@
       "description": "Plugin: voice notification when OpenCode session goes idle",
       "tags": ["notification", "wsl"],
       "files": [
-        { "src": "items/opencode/plugins/notify-done/notify-done.ts", "target": ".opencode/plugins/notify-done.ts" }
+        {
+          "src": "items/opencode/plugins/notify-done/notify-done.ts",
+          "target": ".opencode/plugins/notify-done.ts"
+        }
       ],
       "dependencies": ["notify-done-script"]
     }
