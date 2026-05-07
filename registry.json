@@ -225,6 +225,46 @@
       "dependencies": []
     },
     {
+      "name": "handover",
+      "tool": ["claude", "opencode"],
+      "type": "command",
+      "description": "Generate a professional handover document for a codebase module or set of files",
+      "tags": ["documentation", "onboarding"],
+      "files": [
+        {
+          "src": "items/claude/commands/handover/handover.md",
+          "target": ".claude/commands/handover.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/handover/handover.md",
+          "target": ".opencode/commands/handover.md",
+          "tool": "opencode"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "weekly-changelog",
+      "tool": ["claude", "opencode"],
+      "type": "command",
+      "description": "Generate a customer-facing, feature-oriented changelog from the last week of git commits",
+      "tags": ["git", "documentation"],
+      "files": [
+        {
+          "src": "items/claude/commands/weekly-changelog/weekly-changelog.md",
+          "target": ".claude/commands/weekly-changelog.md",
+          "tool": "claude"
+        },
+        {
+          "src": "items/claude/commands/weekly-changelog/weekly-changelog.md",
+          "target": ".opencode/commands/weekly-changelog.md",
+          "tool": "opencode"
+        }
+      ],
+      "dependencies": []
+    },
+    {
       "name": "scope-by-flagged-todos",
       "tool": ["claude", "opencode"],
       "type": "command",
